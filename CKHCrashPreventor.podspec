@@ -37,6 +37,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
+                    iOS 中常见的Crash 类型，利用runtime 进行过滤处理
                    DESC
 
   #s.homepage     = "http://EXAMPLE/CKHCrashPreventor"
