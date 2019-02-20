@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "cenkunhua" => "1250578320@qq.com" }
   s.platform     = :ios
-  s.source       = { :git => "https://github.com/KenwayCen/CKHCrashPreventor.git", :tag => "#v1.0.0" }
+  s.source       = { :git => "https://github.com/KenwayCen/CKHCrashPreventor.git", :tag => "v1.0.0" }
   s.social_media_url   = "https://github.com/KenwayCen/CKHCrashPreventor"
   s.source_files  = 'CKHCrashPreventor/CrashPreventor/*.{h,m}'
   s.requires_arc = true
