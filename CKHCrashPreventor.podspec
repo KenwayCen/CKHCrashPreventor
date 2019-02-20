@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "CKHCrashPreventor"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "Crash Preventor and print log"
   s.homepage     = "https://github.com/KenwayCen/CKHCrashPreventor"
   s.license      = { :type => "MIT", :file => "LICENSE" }
