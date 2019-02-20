@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.source       = {:git => "https://github.com/KenwayCen/CKHCrashPreventor.git", :tag => "v1.0.0" }
   s.social_media_url   = "https://github.com/KenwayCen/CKHCrashPreventor"
   s.source_files  = 'CKHCrashPreventor/CrashPreventor/*.{h,m}'
-  s.requires_arc = false
+  s.requires_arc = true
   s.requires_arc = ['CKHCrashPreventor/CrashPreventor/*']
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
