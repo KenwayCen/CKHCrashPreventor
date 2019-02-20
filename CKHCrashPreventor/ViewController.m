@@ -27,6 +27,10 @@
     [dd insertObject:@"544" atIndex:3];
     
     
+    NSDictionary *dic = @{@"num":@(10),@"array":@[@"11",@"22",@"33"]};
+    NSLog(@"%d",[dic[@"num"] isEqualToString:@"10"]);
+    NSLog(@"%@",[dic[@"array"] objectForKey:@"oo"]);
+    
 }
 
 

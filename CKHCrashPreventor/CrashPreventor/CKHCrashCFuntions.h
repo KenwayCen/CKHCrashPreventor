@@ -28,4 +28,8 @@ static inline void CCP_exchangeClassMethod(Class _class ,SEL _originalSel,SEL _e
     method_exchangeImplementations(methodOriginal, methodNew);
 }
 
+static inline id impEmpty(id self, SEL aSel, ...){
+    return nil;
+}
+
 #endif /* CKHCrashCFuntions_h */

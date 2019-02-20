@@ -20,6 +20,16 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
     return [NSString stringWithFormat:@"*** -[%@ %@]: index %ld beyond bounds [0 .. %ld]",type,method,idx,count];
 }
 
+// 转发的IMPMap类：动态写入方法，避免崩溃
+@interface CCPCrashIMPMap : NSObject
+
+@end
+
+@implementation CCPCrashIMPMap
+
+
+@end
+
 @interface NSArray (CCPCrashPreventor)
 
 @end
@@ -376,6 +386,43 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
     }
 }
 
+@end
+
+@interface NSNumber (CCPCrashPreventor)
+
+@end
+@implementation NSNumber (CCPCrashPreventor)
+- (BOOL)isEqualToString:(NSString *)aString{
+    NSString *str = self.stringValue;
+    return [str isEqualToString:aString];
+}
+
+@end
+
+
+@interface NSObject (CCPUnrecognized)
+
+@end
+
+@implementation NSObject (CCPUnrecognized)
+
+- (id)CCP_forwardingTargetForSelector:(SEL)aSelector{
+    if (![self overideForwardingMethods] || [self isEqual:[NSNull null]]) {
+        NSString *errorInfo = [[NSString alloc]initWithFormat:@"-[%@ %@]: unrecognized selector sent to instance %p",NSStringFromClass(self.class),NSStringFromSelector(aSelector),self];
+        throwError(errorInfo);
+        // 将实现转出去到一个处理类中：但是这个实现会被置空（impEmpty）
+        class_addMethod([CCPCrashIMPMap class], aSelector, (IMP)impEmpty, "v@:");
+        return [[CCPCrashIMPMap alloc]init];
+    }
+    return [self CCP_forwardingTargetForSelector:aSelector];
+}
+
+- (BOOL)overideForwardingMethods{
+    BOOL overide = NO;
+    overide = (class_getMethodImplementation([NSObject class], @selector(forwardInvocation:)) != class_getMethodImplementation([self class], @selector(forwardInvocation:))) ||
+    (class_getMethodImplementation([NSObject class], @selector(forwardingTargetForSelector:)) != class_getMethodImplementation([self class], @selector(forwardingTargetForSelector:)));
+    return overide;
+}
 
 @end
 
@@ -388,6 +435,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
     [self exchangeMethodsForNSMutableDictionary];
     [self exchangeMethodsForNSString];
     [self exchangeMethodsForNSMutableString];
+    [self exchangeForwardingTargetForSelector];
 }
 
 + (void)exchangeMethodsForNSArray{
@@ -442,6 +490,10 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
     CCP_exchangeInstanceMethod(_NSCFNSString, @selector(insertString:atIndex:), _NSCFNSString, @selector(CCP_insertString:atIndex:));
     CCP_exchangeInstanceMethod(_NSCFNSString, @selector(deleteCharactersInRange:), _NSCFNSString, @selector(CCP_deleteCharactersInRange:));
     CCP_exchangeInstanceMethod(_NSCFNSString, @selector(replaceCharactersInRange:withString:), _NSCFNSString, @selector(CCP_replaceCharactersInRange:withString:));
+}
+
++ (void)exchangeForwardingTargetForSelector{
+    CCP_exchangeInstanceMethod([NSObject class], @selector(forwardingTargetForSelector:), [NSObject class], @selector(CCP_forwardingTargetForSelector:));
 }
 
 
