@@ -18,9 +18,9 @@ Pod::Spec.new do |s|
   s.social_media_url   = "https://github.com/KenwayCen/CKHCrashPreventor"
   s.source_files  = 'CKHCrashPreventor/CrashPreventor/*.{h,m}'
   s.requires_arc = true
-  # s.requires_arc = ['CKHCrashPreventor/CrashPreventor/*']
+  s.requires_arc = ['CKHCrashPreventor/CrashPreventor/*']
   s.description  = <<-DESC
                     iOS 中常见的Crash 类型，利用runtime 进行过滤处理
                    DESC
-                   
+
 end
