@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.summary      = 'Crash Preventor and print log'
   s.homepage     = 'https://github.com/KenwayCen/CKHCrashPreventor'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
-  s.author       = { 'Kenway' => '913213870@qq.com' }
+  s.author       = { 'KC' => '1250578320@qq.com' }
   s.platform     = :ios, '8.0'
   s.source       = { :git => 'https://github.com/KenwayCen/CKHCrashPreventor.git', :tag => 'v1.0.1' }
   s.social_media_url   = 'https://github.com/KenwayCen/CKHCrashPreventor'
