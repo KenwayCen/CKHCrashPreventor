@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <AVKit/AVPlayerViewController.h>
 
 @interface ViewController ()
 
