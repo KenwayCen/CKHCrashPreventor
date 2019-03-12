@@ -11,6 +11,8 @@
 #ifndef CKHCrashCFuntions_h
 #define CKHCrashCFuntions_h
 
+static NSString * const kCrashLogDirName = @"CCPCrashLog";
+
 static inline void CCP_exchangeInstanceMethod(Class _originalClass ,SEL _originalSel,Class _targetClass ,SEL _targetSel){
     Method methodOriginal = class_getInstanceMethod(_originalClass, _originalSel);
     Method methodNew = class_getInstanceMethod(_targetClass, _targetSel);
@@ -30,6 +32,49 @@ static inline void CCP_exchangeClassMethod(Class _class ,SEL _originalSel,SEL _e
 
 static inline id impEmpty(id self, SEL aSel, ...){
     return nil;
+}
+
+#pragma mark - log -
+
+NSString * pathForCrashLog(){
+    NSString *tempPath = NSTemporaryDirectory();
+    NSString *crashLogPath = [tempPath stringByAppendingPathComponent:kCrashLogDirName];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:crashLogPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:crashLogPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    return crashLogPath;
+}
+void throwError(NSString *errorInfo){
+    NSDate *date = [NSDate date];
+    NSTimeInterval interval = 8 * 60 * 60;
+    NSDate *today = [NSDate dateWithTimeInterval:interval sinceDate:date];
+    NSArray *callStackSymbolsArr = [NSThread callStackSymbols];
+    NSString *crashReason = [NSString stringWithFormat:@"\n\n%@ Crash Reason:%@\n%@",today,errorInfo,callStackSymbolsArr];
+    //保存日志
+    NSString *crashLogPath = pathForCrashLog();
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    formatter.dateFormat = @"yyyy-MM-dd";
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    NSString *crashLogFileName = [formatter stringFromDate:date];
+    NSString *crashLogFilePath = [crashLogPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.log",crashLogFileName]];
+    NSError *error = nil;
+    NSString *log = [NSString stringWithContentsOfFile:crashLogFilePath encoding:NSUTF8StringEncoding error:&error];
+    if (log) {
+        log = [log stringByAppendingFormat:@"\n%@",crashReason];
+    }else{
+        log = crashReason;
+    }
+    if (log) {
+        [log writeToFile:crashLogFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    }
+#ifdef DEBUG
+    //debug 模式打印日志
+    NSLog(@"%@",crashReason);
+#endif
+}
+
+NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, unsigned long count){
+    return [NSString stringWithFormat:@"\n*** -[%@ %@]: index %ld beyond bounds [0 .. %ld]",type,method,idx,count];
 }
 
 #endif /* CKHCrashCFuntions_h */

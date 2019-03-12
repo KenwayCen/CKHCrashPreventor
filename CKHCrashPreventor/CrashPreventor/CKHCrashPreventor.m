@@ -10,16 +10,6 @@
 #import "CKHCrashCFuntions.h"
 
 
-void throwError(NSString *errorInfo){
-    NSArray *callStackSymbolsArr = [NSThread callStackSymbols];
-    NSString *crashReason = [NSString stringWithFormat:@"crash reason:%@\n%@",errorInfo,callStackSymbolsArr];
-    NSLog(@"%@",crashReason);
-}
-
-NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, unsigned long count){
-    return [NSString stringWithFormat:@"\n*** -[%@ %@]: index %ld beyond bounds [0 .. %ld]",type,method,idx,count];
-}
-
 // 转发的IMPMap类：动态写入方法，避免崩溃
 @interface CCPCrashIMPMap : NSObject
 
@@ -44,7 +34,6 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
             objectsNew[index] = objects[i];
             index++;
         }else{
-            //记录错误
             NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSPlaceholderArray initWithObjects:count:]: attempt to insert nil object from objects[%d]",i];
             throwError(errorInfo);
         }
@@ -55,7 +44,6 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 //objectAtIndexedSubscript:
 - (id)CCP_objectAtIndexedSubscript:(NSUInteger)idx{
     if (idx >= self.count) {
-        //记录错误
         NSString *errorInfo = beyondErrorInfo(@"__NSArrayI", NSStringFromSelector(_cmd), (unsigned long)index,(unsigned long)self.count);
         throwError(errorInfo);
         return nil;
@@ -112,7 +100,6 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 //objectAtIndexedSubscript
 - (id)CCP_MArrayobjectAtIndexedSubscript:(NSUInteger)idx{
     if (idx >= self.count) {
-        //记录错误
         NSString *errorInfo = beyondErrorInfo(@"__NSArrayM", NSStringFromSelector(_cmd), (unsigned long)index,(unsigned long)self.count);
         throwError(errorInfo);
         return nil;
@@ -296,7 +283,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_dictionaryMSetObject:(id)anObject forKey:(id<NSCopying>)aKey{
     if (anObject == nil || aKey == nil) {
-        NSString * errorInfo = @"*** setObjectForKey: object or key cannot be nil";
+        NSString * errorInfo = @"\n*** setObjectForKey: object or key cannot be nil";
         throwError(errorInfo);
     }else{
         [self CCP_dictionaryMSetObject:anObject forKey:aKey];
@@ -305,7 +292,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_dictionaryMRemoveObjectForKey:(id)aKey{
     if (aKey == nil) {
-        NSString *errorInfo = @"*** -[__NSDictionaryM removeObjectForKey:]: key cannot be nil";
+        NSString *errorInfo = @"\n*** -[__NSDictionaryM removeObjectForKey:]: key cannot be nil";
         throwError(errorInfo);
     }else{
         [self CCP_dictionaryMRemoveObjectForKey:aKey];
@@ -328,7 +315,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (unichar)CCP_characterAtIndex:(NSUInteger)index{
     if (index >= self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString characterAtIndex:]: Range or index %ld out of bounds",(unsigned long)index];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFConstantString characterAtIndex:]: Range or index %ld out of bounds",(unsigned long)index];
         throwError(errorInfo);
         return 0;
     }
@@ -337,7 +324,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (NSString *)CCP_substringFromIndex:(NSUInteger)from{
     if (from < 0 || from > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString substringFromIndex:]: Index %ld out of bounds; string length %ld",(unsigned long)from,(unsigned long)self.length];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFConstantString substringFromIndex:]: Index %ld out of bounds; string length %ld",(unsigned long)from,(unsigned long)self.length];
         throwError(errorInfo);
         return @"";
     }
@@ -346,7 +333,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (NSString *)CCP_substringToIndex:(NSUInteger)to{
     if (to > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString substringToIndex:]: Index %ld out of bounds; string length %ld",(unsigned long)to,(unsigned long)self.length];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFConstantString substringToIndex:]: Index %ld out of bounds; string length %ld",(unsigned long)to,(unsigned long)self.length];
         throwError(errorInfo);
         NSUInteger fixTo = self.length;
         if (fixTo >= 0) {
@@ -360,7 +347,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (NSString *)CCP_substringWithRange:(NSRange)range{
     if (range.location + range.length > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString substringWithRange:]: Range {%ld, %ld} out of bounds; string length %ld",(unsigned long)range.location,(unsigned long)range.length,(unsigned long)self.length];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFConstantString substringWithRange:]: Range {%ld, %ld} out of bounds; string length %ld",(unsigned long)range.location,(unsigned long)range.length,(unsigned long)self.length];
         throwError(errorInfo);
         if (range.location < self.length) {
             NSRange fixRange = NSMakeRange(range.location, self.length - range.location);
@@ -388,7 +375,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
  */
 - (void)CCP_insertString:(NSString *)aString atIndex:(NSUInteger)loc{
     if (loc > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString insertString:atIndex:]: Range or index %ld out of bounds",(unsigned long)loc];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFString insertString:atIndex:]: Range or index %ld out of bounds",(unsigned long)loc];
         throwError(errorInfo);
     }else{
         [self CCP_insertString:aString atIndex:loc];
@@ -398,7 +385,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_deleteCharactersInRange:(NSRange)range{
     if (range.location + range.length > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString deleteCharactersInRange:]: Range or index (%ld,%ld) out of bounds",(unsigned long)range.location,(unsigned long)range.length];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFString deleteCharactersInRange:]: Range or index (%ld,%ld) out of bounds",(unsigned long)range.location,(unsigned long)range.length];
         throwError(errorInfo);
         if (range.location < self.length) {
             NSRange fixRange = NSMakeRange(range.location, self.length - range.location);
@@ -411,7 +398,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_replaceCharactersInRange:(NSRange)range withString:(NSString *)aString{
     if (range.location + range.length > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString replaceCharactersInRange:withString:]: Range or index (%ld,%ld) out of bounds",(unsigned long)range.location,(unsigned long)range.length];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSCFString replaceCharactersInRange:withString:]: Range or index (%ld,%ld) out of bounds",(unsigned long)range.location,(unsigned long)range.length];
         throwError(errorInfo);
         if (range.location < self.length) {
             NSRange fixRange = NSMakeRange(range.location, self.length - range.location);
@@ -444,7 +431,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (id)CCP_forwardingTargetForSelector:(SEL)aSelector{
     if (![self overideForwardingMethods] || [self isEqual:[NSNull null]]) {
-        NSString *errorInfo = [[NSString alloc]initWithFormat:@"*** -[%@ %@]: unrecognized selector sent to instance %p",NSStringFromClass(self.class),NSStringFromSelector(aSelector),self];
+        NSString *errorInfo = [[NSString alloc]initWithFormat:@"\n*** -[%@ %@]: unrecognized selector sent to instance %p",NSStringFromClass(self.class),NSStringFromSelector(aSelector),self];
         throwError(errorInfo);
         // 将实现转出去到一个处理类中：但是这个实现会被置空（impEmpty）
         class_addMethod([CCPCrashIMPMap class], aSelector, (IMP)impEmpty, "v@:");
