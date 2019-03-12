@@ -31,6 +31,18 @@
     NSDictionary *dic = @{@"num":@(10),@"array":@[@"11",@"22",@"33"]};
     NSLog(@"%d",[dic[@"num"] isEqualToString:@"10"]);
     NSLog(@"%@",[dic[@"array"] objectForKey:@"oo"]);
+    NSMutableDictionary *dic1 = [NSMutableDictionary dictionaryWithDictionary:@{@"10":@(10)}];
+    NSMutableDictionary *dic3 = [NSMutableDictionary dictionaryWithDictionary:nil];
+    [dic3 setObject:@"ww" forKey:@"1"];
+    NSLog(@"###dic3:%@",dic3);
+    [dic1 setObject:nil forKey:@"2"];
+    
+    NSMutableDictionary *dic2 = [NSMutableDictionary dictionaryWithDictionary:@(10)];
+    [dic2 setObject:@"56" forKey:@"56"];
+    [dic2 setObject:@"26" forKey:@"46"];
+    NSLog(@"####重新赋值: %@---%@",dic2,NSStringFromClass(dic2.class));
+    
+    
     
 }
 

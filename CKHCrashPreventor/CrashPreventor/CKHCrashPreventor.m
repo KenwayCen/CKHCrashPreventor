@@ -17,7 +17,7 @@ void throwError(NSString *errorInfo){
 }
 
 NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, unsigned long count){
-    return [NSString stringWithFormat:@"*** -[%@ %@]: index %ld beyond bounds [0 .. %ld]",type,method,idx,count];
+    return [NSString stringWithFormat:@"\n*** -[%@ %@]: index %ld beyond bounds [0 .. %ld]",type,method,idx,count];
 }
 
 // 转发的IMPMap类：动态写入方法，避免崩溃
@@ -45,7 +45,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
             index++;
         }else{
             //记录错误
-            NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSPlaceholderArray initWithObjects:count:]: attempt to insert nil object from objects[%d]",i];
+            NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSPlaceholderArray initWithObjects:count:]: attempt to insert nil object from objects[%d]",i];
             throwError(errorInfo);
         }
     }
@@ -143,7 +143,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 //insertObject:atIndex:
 - (void)CCP_MArrayInsertObject:(id)anObject atIndex:(NSUInteger)index{
     if (anObject == nil) {
-        NSString *errorInfo = @"***  -[__NSArrayM insertObject:atIndex:]: object cannot be nil";
+        NSString *errorInfo = @"\n***  -[__NSArrayM insertObject:atIndex:]: object cannot be nil";
         throwError(errorInfo);
         return;
     }
@@ -161,7 +161,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
         throwError(errorInfo);
         return;
     }else if (objects.count != (indexes.count)){
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[NSMutableArray insertObjects:atIndexes:]: count of array (%ld) differs from count of index set (%ld)",(unsigned long)objects.count,(unsigned long)indexes.count];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[NSMutableArray insertObjects:atIndexes:]: count of array (%ld) differs from count of index set (%ld)",(unsigned long)objects.count,(unsigned long)indexes.count];
         throwError(errorInfo);
         return;
     }
@@ -171,12 +171,12 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 //replaceObjectAtIndex
 - (void)CCP_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject{
     if (anObject == nil) {
-        NSString *errorInfo = @"***  -[__NSArrayM replaceObjectAtIndex:withObject:]: object cannot be nil";
+        NSString *errorInfo = @"\n***  -[__NSArrayM replaceObjectAtIndex:withObject:]: object cannot be nil";
         throwError(errorInfo);
         return;
     }
     if (index >= self.count) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSArrayM replaceObjectAtIndex:withObject:]: index %ld beyond bounds [0 .. %ld]",(unsigned long)index,(unsigned long)self.count];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSArrayM replaceObjectAtIndex:withObject:]: index %ld beyond bounds [0 .. %ld]",(unsigned long)index,(unsigned long)self.count];
         throwError(errorInfo);
         return;
     }
@@ -185,7 +185,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_replaceObjectsAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects{
     if (indexes.lastIndex >= self.count||indexes.firstIndex >= self.count) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSArrayM replaceObjectsInRange:withObjects:count:]: range {%ld, %ld} extends beyond bounds [0 .. %ld]",(unsigned long)indexes.firstIndex,(unsigned long)indexes.count,(unsigned long)self.count];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSArrayM replaceObjectsInRange:withObjects:count:]: range {%ld, %ld} extends beyond bounds [0 .. %ld]",(unsigned long)indexes.firstIndex,(unsigned long)indexes.count,(unsigned long)self.count];
         throwError(errorInfo);
     }else{
         [self CCP_replaceObjectsAtIndexes:indexes withObjects:objects];
@@ -194,7 +194,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 -(void)CCP_replaceObjectsInRange:(NSRange)range withObjectsFromArray:(NSArray *)otherArray{
     if (range.location+range.length > self.count) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[NSMutableArray replaceObjectsInRange:withObjectsFromArray:]: range {%ld, %ld} extends beyond bounds [0 .. %ld]",(unsigned long)range.location,(unsigned long)range.length,(unsigned long)self.count];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[NSMutableArray replaceObjectsInRange:withObjectsFromArray:]: range {%ld, %ld} extends beyond bounds [0 .. %ld]",(unsigned long)range.location,(unsigned long)range.length,(unsigned long)self.count];
         throwError(errorInfo);
     }else{
         [self CCP_replaceObjectsInRange:range withObjectsFromArray:otherArray];
@@ -215,7 +215,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 + (instancetype)CCP_dictionaryWithObjects:(NSArray *)objects forKeys:(NSArray<id<NSCopying>> *)keys{
     if (objects.count != keys.count) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[NSDictionary initWithObjects:forKeys:]: count of objects (%ld) differs from count of keys (%ld)",(unsigned long)objects.count,(unsigned long)keys.count];
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[NSDictionary initWithObjects:forKeys:]: count of objects (%ld) differs from count of keys (%ld)",(unsigned long)objects.count,(unsigned long)keys.count];
         throwError(errorInfo);
         return nil;
     }
@@ -228,11 +228,33 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
             keysNew[index] = keys[i];
             index ++;
         }else{
-            NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[%d]",i];
+            NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[%d]",i];
             throwError(errorInfo);
         }
     }
     return [self CCP_dictionaryWithObjects:[NSArray arrayWithObjects:objectsNew count:index] forKeys: [NSArray arrayWithObjects:keysNew count:index]];
+}
+
+- (instancetype)CCP_initWithObjects:(NSArray *)objects forKeys:(NSArray<NSCopying> *)keys{
+    if (objects.count != keys.count) {
+        NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[NSDictionary initWithObjects:forKeys:]: count of objects (%ld) differs from count of keys (%ld)",(unsigned long)objects.count,(unsigned long)keys.count];
+        throwError(errorInfo);
+        return nil;
+    }
+    NSUInteger index = 0;
+    id _Nonnull objectsNew[objects.count];
+    id <NSCopying> _Nonnull keysNew[keys.count];
+    for (int i = 0; i<keys.count; i++) {
+        if (objects[i] && keys[i]) {
+            objectsNew[index] = objects[i];
+            keysNew[index] = keys[i];
+            index ++;
+        }else{
+            NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[%d]",i];
+            throwError(errorInfo);
+        }
+    }
+    return [self CCP_initWithObjects:[NSArray arrayWithObjects:objectsNew count:index] forKeys:[NSArray arrayWithObjects:keysNew count:index]];
 }
 
 - (instancetype)CCP_initWithObjects:(id  _Nonnull const [])objects forKeys:(id<NSCopying>  _Nonnull const [])keys count:(NSUInteger)cnt{
@@ -245,13 +267,24 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
             keysNew[index] = keys[i];
             index ++;
         }else{
-            NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[%d]",i];
+            NSString *errorInfo = [NSString stringWithFormat:@"\n*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[%d]",i];
             throwError(errorInfo);
         }
     }
     return [self CCP_initWithObjects:objectsNew forKeys:keysNew count:index];
 }
 
+- (instancetype)CCP_initWithDictionary:(NSDictionary *)otherDictionary copyItems:(BOOL)flag{
+    if ([otherDictionary isKindOfClass:[NSDictionary class]]) {
+        return [self CCP_initWithDictionary:otherDictionary copyItems:flag];
+    }else if(otherDictionary == nil){
+        return [self CCP_initWithDictionary:@{} copyItems:flag];
+    } else{
+        NSString *errInfo = [NSString stringWithFormat:@"\n*** -[NSDictionary initWithDictionary:copyItems:]: dictionary argument <%@ is class of %@> is not an NSDictionary",otherDictionary,[otherDictionary class]];
+        throwError(errInfo);
+        return [self CCP_initWithDictionary:@{} copyItems:flag];
+    }
+}
 
 @end
 
@@ -295,7 +328,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (unichar)CCP_characterAtIndex:(NSUInteger)index{
     if (index >= self.length) {
-        NSString *errorInfo = @"*** -[__NSCFConstantString characterAtIndex:]: Range or index out of bounds";
+        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString characterAtIndex:]: Range or index %ld out of bounds",(unsigned long)index];
         throwError(errorInfo);
         return 0;
     }
@@ -303,37 +336,40 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 }
 
 - (NSString *)CCP_substringFromIndex:(NSUInteger)from{
-    if (from < 0 || from >= self.length) {
+    if (from < 0 || from > self.length) {
         NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString substringFromIndex:]: Index %ld out of bounds; string length %ld",(unsigned long)from,(unsigned long)self.length];
         throwError(errorInfo);
-        return nil;
+        return @"";
     }
     return [self CCP_substringFromIndex:from];
 }
 
 - (NSString *)CCP_substringToIndex:(NSUInteger)to{
-    if (to >= self.length) {
+    if (to > self.length) {
         NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString substringToIndex:]: Index %ld out of bounds; string length %ld",(unsigned long)to,(unsigned long)self.length];
         throwError(errorInfo);
-        NSUInteger fixTo = self.length - 1;
+        NSUInteger fixTo = self.length;
         if (fixTo >= 0) {
-            return [self CCP_substringFromIndex:fixTo];
+            return [self CCP_substringToIndex:fixTo];
         }else{
-            return nil;
+            return @"";
         }
     }
-    return [self CCP_substringFromIndex:to];
+    return [self CCP_substringToIndex:to];
 }
 
 - (NSString *)CCP_substringWithRange:(NSRange)range{
-    NSString *result = nil;
-    @try {
-        result = [self CCP_substringWithRange:range];
-    } @catch (NSException *exception) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString BMP_substringWithRange:]: Range {%ld, %ld} out of bounds; string length %ld",(unsigned long)range.location,(unsigned long)range.length,(unsigned long)self.length];
+    if (range.location + range.length > self.length) {
+        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFConstantString substringWithRange:]: Range {%ld, %ld} out of bounds; string length %ld",(unsigned long)range.location,(unsigned long)range.length,(unsigned long)self.length];
         throwError(errorInfo);
-    } @finally {
-        return result;
+        if (range.location < self.length) {
+            NSRange fixRange = NSMakeRange(range.location, self.length - range.location);
+            return [self CCP_substringWithRange:fixRange];
+        }else{
+            return @"";
+        }
+    }else{
+        return [self CCP_substringWithRange:range];
     }
 }
 
@@ -352,7 +388,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
  */
 - (void)CCP_insertString:(NSString *)aString atIndex:(NSUInteger)loc{
     if (loc > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString insertString:atIndex:]: Range or index out of bounds"];
+        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString insertString:atIndex:]: Range or index %ld out of bounds",(unsigned long)loc];
         throwError(errorInfo);
     }else{
         [self CCP_insertString:aString atIndex:loc];
@@ -362,7 +398,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_deleteCharactersInRange:(NSRange)range{
     if (range.location + range.length > self.length) {
-        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString deleteCharactersInRange:]: Range or index out of bounds"];
+        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString deleteCharactersInRange:]: Range or index (%ld,%ld) out of bounds",(unsigned long)range.location,(unsigned long)range.length];
         throwError(errorInfo);
         if (range.location < self.length) {
             NSRange fixRange = NSMakeRange(range.location, self.length - range.location);
@@ -375,7 +411,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (void)CCP_replaceCharactersInRange:(NSRange)range withString:(NSString *)aString{
     if (range.location + range.length > self.length) {
-        NSString *errorInfo = @"-[__NSCFString replaceCharactersInRange:withString:]: Range or index out of bounds";
+        NSString *errorInfo = [NSString stringWithFormat:@"*** -[__NSCFString replaceCharactersInRange:withString:]: Range or index (%ld,%ld) out of bounds",(unsigned long)range.location,(unsigned long)range.length];
         throwError(errorInfo);
         if (range.location < self.length) {
             NSRange fixRange = NSMakeRange(range.location, self.length - range.location);
@@ -408,7 +444,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
 
 - (id)CCP_forwardingTargetForSelector:(SEL)aSelector{
     if (![self overideForwardingMethods] || [self isEqual:[NSNull null]]) {
-        NSString *errorInfo = [[NSString alloc]initWithFormat:@"-[%@ %@]: unrecognized selector sent to instance %p",NSStringFromClass(self.class),NSStringFromSelector(aSelector),self];
+        NSString *errorInfo = [[NSString alloc]initWithFormat:@"*** -[%@ %@]: unrecognized selector sent to instance %p",NSStringFromClass(self.class),NSStringFromSelector(aSelector),self];
         throwError(errorInfo);
         // 将实现转出去到一个处理类中：但是这个实现会被置空（impEmpty）
         class_addMethod([CCPCrashIMPMap class], aSelector, (IMP)impEmpty, "v@:");
@@ -469,6 +505,9 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
     Class __NSPlaceholderDictionary = NSClassFromString(@"__NSPlaceholderDictionary");
     CCP_exchangeClassMethod(dictionary, @selector(dictionaryWithObjects:forKeys:count:), @selector(CCP_dictionaryWithObjects:forKeys:count:));
     CCP_exchangeInstanceMethod(__NSPlaceholderDictionary, @selector(initWithObjects:forKeys:count:), __NSPlaceholderDictionary, @selector(CCP_initWithObjects:forKeys:count:));
+    CCP_exchangeClassMethod(dictionary, @selector(dictionaryWithObject:forKey:), @selector(CCP_dictionaryMSetObject:forKey:));
+    CCP_exchangeInstanceMethod(dictionary, @selector(initWithObjects:forKeys:), dictionary, @selector(CCP_initWithObjects:forKeys:));
+    CCP_exchangeInstanceMethod(dictionary, @selector(initWithDictionary:copyItems:), dictionary, @selector(CCP_initWithDictionary:copyItems:));
 }
 
 + (void)exchangeMethodsForNSMutableDictionary{
@@ -482,7 +521,7 @@ NSString * beyondErrorInfo(NSString * type,NSString *method, unsigned long idx, 
     CCP_exchangeInstanceMethod(_NSCFConstantString, @selector(characterAtIndex:), _NSCFConstantString, @selector(CCP_characterAtIndex:));
     CCP_exchangeInstanceMethod(_NSCFConstantString, @selector(substringFromIndex:), _NSCFConstantString, @selector(CCP_substringFromIndex:));
     CCP_exchangeInstanceMethod(_NSCFConstantString, @selector(substringToIndex:), _NSCFConstantString, @selector(CCP_substringToIndex:));
-    CCP_exchangeInstanceMethod(_NSCFConstantString, @selector(subarrayWithRange:), _NSCFConstantString, @selector(CCP_substringWithRange:));
+    CCP_exchangeInstanceMethod(_NSCFConstantString, @selector(substringWithRange:), _NSCFConstantString, @selector(CCP_substringWithRange:));
 }
 
 + (void)exchangeMethodsForNSMutableString{
