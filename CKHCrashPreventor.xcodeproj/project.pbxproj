@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		EA367127221BB74200A838C6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA367126221BB74200A838C6 /* AppDelegate.m */; };
-		EA36712A221BB74200A838C6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA367129221BB74200A838C6 /* ViewController.m */; };
+		EA36712A221BB74200A838C6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA367129221BB74200A838C6 /* ViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EA36712D221BB74200A838C6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA36712B221BB74200A838C6 /* Main.storyboard */; };
 		EA36712F221BB74400A838C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA36712E221BB74400A838C6 /* Assets.xcassets */; };
 		EA367132221BB74400A838C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA367130221BB74400A838C6 /* LaunchScreen.storyboard */; };
 		EA367135221BB74400A838C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA367134221BB74400A838C6 /* main.m */; };
 		EA36713D221BB75700A838C6 /* CKHCrashPreventor.m in Sources */ = {isa = PBXBuildFile; fileRef = EA36713C221BB75700A838C6 /* CKHCrashPreventor.m */; };
+		EA3B3BC2229D1C0500565864 /* Test.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3B3BC1229D1C0500565864 /* Test.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,8 @@
 		EA36713B221BB75700A838C6 /* CKHCrashPreventor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKHCrashPreventor.h; sourceTree = "<group>"; };
 		EA36713C221BB75700A838C6 /* CKHCrashPreventor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CKHCrashPreventor.m; sourceTree = "<group>"; };
 		EA36713E221BDAB200A838C6 /* CKHCrashCFuntions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKHCrashCFuntions.h; sourceTree = "<group>"; };
+		EA3B3BC0229D1C0500565864 /* Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
+		EA3B3BC1229D1C0500565864 /* Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Test.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				EA367126221BB74200A838C6 /* AppDelegate.m */,
 				EA367128221BB74200A838C6 /* ViewController.h */,
 				EA367129221BB74200A838C6 /* ViewController.m */,
+				EA3B3BC0229D1C0500565864 /* Test.h */,
+				EA3B3BC1229D1C0500565864 /* Test.m */,
 				EA36712B221BB74200A838C6 /* Main.storyboard */,
 				EA36712E221BB74400A838C6 /* Assets.xcassets */,
 				EA367130221BB74400A838C6 /* LaunchScreen.storyboard */,
@@ -156,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA3B3BC2229D1C0500565864 /* Test.m in Sources */,
 				EA36712A221BB74200A838C6 /* ViewController.m in Sources */,
 				EA367135221BB74400A838C6 /* main.m in Sources */,
 				EA36713D221BB75700A838C6 /* CKHCrashPreventor.m in Sources */,
@@ -301,14 +307,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4DUPA5TJFR;
 				INFOPLIST_FILE = CKHCrashPreventor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kenway.CKHCrashPreventor;
+				PRODUCT_BUNDLE_IDENTIFIER = com.squaremount.compositionNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = zwzt;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -317,14 +326,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4DUPA5TJFR;
 				INFOPLIST_FILE = CKHCrashPreventor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kenway.CKHCrashPreventor;
+				PRODUCT_BUNDLE_IDENTIFIER = com.squaremount.compositionNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = zwzt;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

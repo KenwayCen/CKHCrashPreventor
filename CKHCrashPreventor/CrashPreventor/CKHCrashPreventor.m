@@ -423,6 +423,8 @@
 @end
 
 
+
+
 @interface NSObject (CCPUnrecognized)
 
 @end
@@ -440,6 +442,12 @@
     return [self CCP_forwardingTargetForSelector:aSelector];
 }
 
+/**
+ 判断forwardInvocation 和 forwardingTargetForSelector
+ 方法是否有被重写，有重写则直接转发,调用当前类重写过的forwardInvocation和forwardingTargetForSelector,不做任何其他处理
+ 可以直接通过 IMP是否相等来判断是否有被重写
+ => 只要调用forwardingTargetForSelector 方法或forwardInvocation方法，表示self 目前没有能力转发
+ */
 - (BOOL)overideForwardingMethods{
     BOOL overide = NO;
     overide = (class_getMethodImplementation([NSObject class], @selector(forwardInvocation:)) != class_getMethodImplementation([self class], @selector(forwardInvocation:))) ||
@@ -492,7 +500,6 @@
     Class __NSPlaceholderDictionary = NSClassFromString(@"__NSPlaceholderDictionary");
     CCP_exchangeClassMethod(dictionary, @selector(dictionaryWithObjects:forKeys:count:), @selector(CCP_dictionaryWithObjects:forKeys:count:));
     CCP_exchangeInstanceMethod(__NSPlaceholderDictionary, @selector(initWithObjects:forKeys:count:), __NSPlaceholderDictionary, @selector(CCP_initWithObjects:forKeys:count:));
-    CCP_exchangeClassMethod(dictionary, @selector(dictionaryWithObject:forKey:), @selector(CCP_dictionaryMSetObject:forKey:));
     CCP_exchangeInstanceMethod(dictionary, @selector(initWithObjects:forKeys:), dictionary, @selector(CCP_initWithObjects:forKeys:));
     CCP_exchangeInstanceMethod(dictionary, @selector(initWithDictionary:copyItems:), dictionary, @selector(CCP_initWithDictionary:copyItems:));
 }

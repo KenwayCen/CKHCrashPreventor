@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <AVKit/AVPlayerViewController.h>
+#import "Test.h"
 
 @interface ViewController ()
 
@@ -42,7 +43,10 @@
     [dic2 setObject:@"26" forKey:@"46"];
     NSLog(@"####重新赋值: %@---%@",dic2,NSStringFromClass(dic2.class));
     
-    
+    NSString *selecterTest = @"system";
+    Test *test = (Test *)selecterTest;
+    [test release];
+    NSLog(@"%ld-%ld",test.isRead,test.retainCount);
     
 }
 
