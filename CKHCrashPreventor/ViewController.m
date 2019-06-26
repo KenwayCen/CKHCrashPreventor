@@ -18,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    /*
     NSMutableString *str1 = [NSMutableString stringWithFormat:@"ABCDEFGHIJKLMN"];
     [str1 replaceCharactersInRange:NSRangeFromString(@"(2,20)") withString:@"呜呜呜呜呜"];
     NSLog(@"%@",str1);
@@ -47,7 +48,18 @@
     Test *test = (Test *)selecterTest;
     [test release];
     NSLog(@"%ld-%ld",test.isRead,test.retainCount);
+    */
+    static NSMutableDictionary *mDic = nil;
+    mDic = [NSMutableDictionary dictionary];
+    [mDic setObject:nil forKey:@"1"];
+    [mDic setValue:@"2" forKey:@"1"];
+    [mDic removeObjectForKey:@"1"];
     
+    [mDic setValue:[Test getID] forKey:@"ID"];
+    NSLog(@"%@-%@",mDic,NSStringFromClass(self.class));
+    
+    NSMutableDictionary *mDic1 = [NSMutableDictionary dictionary];
+    mDic1[nil] = @"22";
 }
 
 

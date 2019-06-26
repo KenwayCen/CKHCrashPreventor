@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Test : NSObject
 @property (nonatomic, assign) BOOL isRead;
+
++ (NSMutableDictionary *)getValueForKey:(NSString *)key;
++ (NSString *)getID;
+
 @end
 
 NS_ASSUME_NONNULL_END

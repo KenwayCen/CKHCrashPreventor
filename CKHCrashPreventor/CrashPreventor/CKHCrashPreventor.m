@@ -286,7 +286,14 @@
         NSString * errorInfo = @"\n*** setObjectForKey: object or key cannot be nil";
         throwError(errorInfo);
     }else{
-        [self CCP_dictionaryMSetObject:anObject forKey:aKey];
+        @try {
+            [self CCP_dictionaryMSetObject:anObject forKey:aKey];
+        } @catch (NSException *exception) {
+            NSString *log = [NSString stringWithFormat:@"may crash-reason:%@\n%@-%@\n%@",NSStringFromClass(self.class),exception.name,exception.reason,[NSThread callStackSymbols]];
+            NSLog(@"###:%@",log);
+        } @finally {
+            
+        }
     }
 }
 
@@ -296,6 +303,22 @@
         throwError(errorInfo);
     }else{
         [self CCP_dictionaryMRemoveObjectForKey:aKey];
+    }
+}
+
+- (void)CCP_dictionaryMSetObject:(id)anObject forKeyedSubscript:(id<NSCopying>)aKey{
+    if (anObject == nil || aKey == nil) {
+        NSString * errorInfo = @"\n*** setObject:forKeyedSubscript object or key cannot be nil";
+        throwError(errorInfo);
+    }else{
+        @try {
+            [self CCP_dictionaryMSetObject:anObject forKeyedSubscript:aKey];
+        } @catch (NSException *exception) {
+            NSString *log = [NSString stringWithFormat:@"may crash-reason:%@\n%@-%@\n%@",NSStringFromClass(self.class),exception.name,exception.reason,[NSThread callStackSymbols]];
+            NSLog(@"###:%@",log);
+        } @finally {
+            
+        }
     }
 }
 
@@ -508,6 +531,7 @@
     Class dictionaryM = NSClassFromString(@"__NSDictionaryM");
     CCP_exchangeInstanceMethod(dictionaryM, @selector(setObject:forKey:), dictionaryM, @selector(CCP_dictionaryMSetObject:forKey:));
     CCP_exchangeInstanceMethod(dictionaryM, @selector(removeObjectForKey:), dictionaryM, @selector(CCP_dictionaryMRemoveObjectForKey:));
+    CCP_exchangeInstanceMethod(dictionaryM, @selector(setObject:forKeyedSubscript:), dictionaryM, @selector(CCP_dictionaryMSetObject:forKeyedSubscript:));
 }
 
 + (void)exchangeMethodsForNSString{
